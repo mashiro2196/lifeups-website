@@ -167,11 +167,12 @@
     }
     .btn-outline {
       display: inline-flex; align-items: center; gap: 0.5rem;
-      border: 1.5px solid var(--c-border); color: var(--c-text-2);
+      border: 1.5px solid var(--c-text-2); color: var(--c-text-2);
       padding: 0.875rem 1.75rem; border-radius: 9999px;
       font-weight: 500; font-size: 0.9rem;
       transition: border-color 0.2s, color 0.2s, background 0.2s;
-      background: none; cursor: pointer;
+      background: rgba(255,255,255,0.75); cursor: pointer;
+      backdrop-filter: blur(4px);
     }
     .btn-outline:hover {
       border-color: var(--c-accent);
@@ -254,7 +255,7 @@
   <div id="top" style="height:80px;"></div>
 
   <!-- HERO -->
-  <section class="hero-bg relative min-h-[88vh] flex items-center py-16 md:py-24 px-6 lg:px-8 overflow-hidden" style="background-image:linear-gradient(rgba(249,247,244,0.72),rgba(249,247,244,0.72)),url('https://lh3.googleusercontent.com/d/1nJ7vriEXDKNUQ8GWibiEPylHTPo7sTgD');background-size:cover;background-position:center;">
+  <section class="hero-bg relative min-h-[88vh] flex items-center py-16 md:py-24 px-6 lg:px-8 overflow-hidden" style="background-image:linear-gradient(rgba(249,247,244,0.55) 0%, rgba(249,247,244,0.55) 50%, rgba(249,247,244,0.92) 80%, rgba(249,247,244,1) 100%),url('https://lh3.googleusercontent.com/d/1nJ7vriEXDKNUQ8GWibiEPylHTPo7sTgD');background-size:cover;background-position:center;">
     <div class="absolute inset-0 pointer-events-none" style="z-index:0;">
       <div style="position:absolute;top:-10%;right:-5%;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(168,130,90,0.06) 0%,transparent 70%);"></div>
       <div style="position:absolute;bottom:-10%;left:-5%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(168,130,90,0.04) 0%,transparent 70%);"></div>
