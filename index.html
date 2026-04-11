@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>暮らしのトータルサポート | 出張・訪問 京都市内</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <style>
+    :root {
+      --c-bg: #F9F7F4;
+      --c-surface: #FFFFFF;
+      --c-surface-alt: #F2EDE6;
+      --c-border: #E4DDD4;
+      --c-text-1: #28251F;
+      --c-text-2: #6B5F52;
+      --c-text-3: #9E9084;
+      --c-accent: #A8825A;
+      --c-accent-dark: #7D6041;
+      --c-accent-light: #CEAD8A;
+      --c-accent-pale: #F2EAE0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background-color: var(--c-bg);
+      color: var(--c-text-1);
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Shippori Mincho', serif;
+      line-height: 1.3;
+    }
+
+    ::selection { background: var(--c-accent-pale); color: var(--c-text-1); }
+
+    /* HEADER */
+    #main-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    #main-header.scrolled {
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 var(--c-border);
+    }
+
+    /* NAV LINKS */
+    .nav-link {
+      position: relative;
+      padding: 4px 0;
+      color: var(--c-text-2);
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: var(--c-accent);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover, .nav-link.active { color: var(--c-accent); }
+    .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+    /* SECTION LABEL */
+    .section-label {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--c-accent);
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+    .section-divider {
+      width: 36px; height: 2px;
+      background: var(--c-accent);
+      margin: 1.25rem auto 0;
+    }
+
+    /* REVEAL ANIMATIONS */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94),
+                  transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .reveal.d1 { transition-delay: 0.1s; }
+    .reveal.d2 { transition-delay: 0.2s; }
+    .reveal.d3 { transition-delay: 0.3s; }
+    .reveal.d4 { transition-delay: 0.4s; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* MOBILE MENU */
+    #mobile-menu {
+      max-height: 0; overflow: hidden; opacity: 0;
+      transition: max-height 0.4s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.3s ease;
+    }
+    #mobile-menu.open { opacity: 1; }
+
+    /* HERO BG */
+    .hero-bg {
+      background-color: var(--c-bg);
+      background-image:
+        radial-gradient(ellipse 80% 60% at 70% 40%, rgba(168,130,90,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 80% at 15% 80%, rgba(168,130,90,0.04) 0%, transparent 70%);
+    }
+
+    /* SERVICE CARDS */
+    .service-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 1.5rem;
+      padding: 2.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--c-accent), var(--c-accent-light));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+      border-color: var(--c-accent-light);
+    }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-card ul { flex-grow: 1; }
+
+    /* BUTTONS */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--c-text-1); color: white;
+      padding: 0.875rem 2rem; border-radius: 9999px;
+      font-weight: 700; font-size: 0.9rem; letter-spacing: 0.03em;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(40,37,31,0.2);
+      text-decoration: none;
+    }
+    .btn-primary:hover {
+      background: var(--c-accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(40,37,31,0.25);
+    }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      border: 1.5px solid var(--c-border); color: var(--c-text-2);
+      padding: 0.875rem 1.75rem; border-radius: 9999px;
+      font-weight: 500; font-size: 0.9rem;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      background: none; cursor: pointer;
+    }
+    .btn-outline:hover {
+      border-color: var(--c-accent);
+      color: var(--c-accent);
+      background: var(--c-accent-pale);
+    }
+
+    /* FLOAT ANIM */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-float { animation: float 5s ease-in-out infinite; }
+
+    /* PING */
+    @keyframes ping {
+      75%, 100% { transform: scale(2); opacity: 0; }
+    }
+    .animate-ping { animation: ping 1.5s cubic-bezier(0,0,0.2,1) infinite; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="main-header" class="py-5">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
+      <div class="flex items-center justify-between">
+
+        <button data-scroll-to="top" class="flex items-center gap-3" style="background:none;border:none;cursor:pointer;">
+          <div class="w-9 h-9 flex items-center justify-center">
+            <img src="https://lh3.googleusercontent.com/d/1riq4cZzex-mUIqjfNqH6BMq9GqF1Rc12" alt="lifeups logo" class="w-full h-full object-contain" />
+          </div>
+          <span class="text-lg font-bold tracking-tight" style="font-family:'Shippori Mincho',serif; color:var(--c-text-1)">
+            暮らしの<span style="color:var(--c-accent)">トータルサポート</span>
+          </span>
+        </button>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex items-center gap-8">
+          <button data-target="services-area" data-scroll-to="services-area" class="nav-link">サービス</button>
+          <button data-target="pricing"       data-scroll-to="pricing"       class="nav-link">料金</button>
+          <button data-target="profile"       data-scroll-to="profile"       class="nav-link">プロフィール</button>
+          <button data-target="info"          data-scroll-to="info"          class="nav-link">ご案内</button>
+          <a href="mailto:negishi.0219@gmail.com" class="btn-primary" style="margin-left:1rem;">
+            <i data-lucide="mail" class="w-4 h-4"></i> お問い合わせ
+          </a>
+        </nav>
+
+        <!-- Mobile Button -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 rounded-xl text-[#6B5F52] hover:bg-[#F2EDE6] transition-colors" style="background:none;border:none;cursor:pointer;">
+          <i id="menu-icon" data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden" style="border-top:1px solid var(--c-border); background:white; margin-top:1rem;">
+      <div class="max-w-6xl mx-auto px-6 py-6 space-y-1">
+        <button data-scroll-to="services-area" class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-[#6B5F52] hover:bg-[#F2EDE6] hover:text-[#A8825A] transition-colors font-medium text-sm" style="background:none;border:none;cursor:pointer;text-align:left;">
+          <i data-lucide="heart-pulse" class="w-4 h-4"></i> サービス内容
+        </button>
+        <button data-scroll-to="pricing" class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-[#6B5F52] hover:bg-[#F2EDE6] hover:text-[#A8825A] transition-colors font-medium text-sm" style="background:none;border:none;cursor:pointer;text-align:left;">
+          <i data-lucide="tag" class="w-4 h-4"></i> 料金
+        </button>
+        <button data-scroll-to="profile" class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-[#6B5F52] hover:bg-[#F2EDE6] hover:text-[#A8825A] transition-colors font-medium text-sm" style="background:none;border:none;cursor:pointer;text-align:left;">
+          <i data-lucide="user" class="w-4 h-4"></i> プロフィール
+        </button>
+        <button data-scroll-to="info" class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-[#6B5F52] hover:bg-[#F2EDE6] hover:text-[#A8825A] transition-colors font-medium text-sm" style="background:none;border:none;cursor:pointer;text-align:left;">
+          <i data-lucide="info" class="w-4 h-4"></i> ご案内
+        </button>
+        <div style="padding-top:1rem;margin-top:0.5rem;border-top:1px solid var(--c-border);">
+          <a href="mailto:negishi.0219@gmail.com" class="flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-xl font-bold text-sm text-white shadow-sm" style="background:var(--c-text-1);text-decoration:none;">
+            <i data-lucide="mail" class="w-4 h-4"></i> お問い合わせはこちら
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div id="top" style="height:80px;"></div>
+
+  <!-- HERO -->
+  <section class="hero-bg relative min-h-[88vh] flex items-center py-16 md:py-24 px-6 lg:px-8 overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" style="z-index:0;">
+      <div style="position:absolute;top:-10%;right:-5%;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(168,130,90,0.06) 0%,transparent 70%);"></div>
+      <div style="position:absolute;bottom:-10%;left:-5%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(168,130,90,0.04) 0%,transparent 70%);"></div>
+    </div>
+
+    <div class="max-w-6xl mx-auto w-full" style="position:relative;z-index:1;">
+      <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+        <!-- Text -->
+        <div class="reveal">
+          <div class="flex items-center gap-3 mb-8">
+            <div class="flex items-center gap-2 px-4 py-1.5 rounded-full shadow-sm" style="background:white;border:1px solid var(--c-border);">
+              <span class="relative flex" style="width:8px;height:8px;">
+                <span class="animate-ping absolute inline-flex w-full h-full rounded-full" style="background:var(--c-accent);opacity:0.6;"></span>
+                <span class="relative inline-flex rounded-full" style="width:8px;height:8px;background:var(--c-accent);"></span>
+              </span>
+              <span class="text-xs font-semibold tracking-wider" style="color:var(--c-text-2);">京都市内 出張・訪問</span>
+            </div>
+          </div>
+
+          <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-6" style="color:var(--c-text-1);line-height:1.2;">
+            <span class="block" style="color:var(--c-accent);">健康 × 福祉</span>
+            <span class="block" style="color:var(--c-accent);">IT × 住まい</span>
+            <span class="block mt-1">暮らしのお手伝い</span>
+          </h1>
+
+          <p class="text-base md:text-lg leading-relaxed mb-10 max-w-lg" style="color:var(--c-text-2);">
+            福祉・ITの現場で10年以上培った経験をもとに、暮らしのお困りごとに寄り添います。
+          </p>
+
+          <div class="flex flex-wrap gap-4">
+            <a href="mailto:negishi.0219@gmail.com" class="btn-primary">
+              <i data-lucide="mail" class="w-4 h-4"></i> お問い合わせはこちら
+            </a>
+            <button data-scroll-to="services-area" class="btn-outline">
+              サービスを見る <i data-lucide="arrow-down" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Stats -->
+          <div class="flex gap-6 md:gap-10 mt-10 pt-8 md:mt-14 md:pt-10" style="border-top:1px solid var(--c-border);">
+            <div>
+              <div class="text-3xl md:text-4xl font-bold" style="color:var(--c-text-1);">10<span class="text-xl md:text-2xl">年以上</span></div>
+              <div class="text-xs md:text-sm mt-1" style="color:var(--c-text-3);">福祉業界経験年数</div>
+            </div>
+            <div style="width:1px;background:var(--c-border);"></div>
+            <div>
+              <div class="text-3xl md:text-4xl font-bold" style="color:var(--c-text-1);">1,000<span class="text-xl md:text-2xl">名以上</span></div>
+              <div class="text-xs md:text-sm mt-1" style="color:var(--c-text-3);">累計ご対応数<br>（ご高齢者・障害をお持ちの方）</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Image -->
+        <div class="relative reveal d2">
+          <div class="rounded-3xl overflow-hidden" style="border:2px solid rgba(255,255,255,0.7);background:#87BEDF;box-shadow:0 24px 64px rgba(135,190,223,0.25),0 4px 16px rgba(0,0,0,0.08),inset 0 1px 0 rgba(255,255,255,0.5);backdrop-filter:blur(8px);">
+            <!-- Logo -->
+            <div style="border-bottom:1px solid rgba(255,255,255,0.3);padding:0.75rem 2rem;background:#87BEDF;">
+              <img
+                src="https://lh3.googleusercontent.com/d/1riq4cZzex-mUIqjfNqH6BMq9GqF1Rc12"
+                alt="lifeups ロゴ"
+                style="width:100%;height:auto;display:block;object-fit:contain;max-height:64px;"
+              />
+            </div>
+            <!-- Main image -->
+            <div class="flex items-center justify-center" style="aspect-ratio:4/3;background:linear-gradient(to bottom, #87BEDF 0%, #C8DCF0 50%, #FFFFFF 100%);">
+
+              <img
+                src="https://lh3.googleusercontent.com/d/1ZZIBzuzKiXGj3fybP0fFnYaldU4qwgHX"
+                alt="出張訪問サービスのイラスト"
+                style="width:100%;height:100%;object-fit:contain;padding:1.5rem;"
+                onerror="this.src='https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=2070&auto=format&fit=crop';this.style.objectFit='cover';this.style.padding='0';"
+              />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services-area" class="py-24 md:py-32 px-6 lg:px-8" style="background:var(--c-surface);">
+    <div class="max-w-6xl mx-auto">
+
+      <div class="text-center mb-16 reveal">
+        <span class="section-label">Services</span>
+        <h2 class="text-4xl md:text-5xl font-bold mt-2" style="color:var(--c-text-1);">サービス内容</h2>
+        <div class="section-divider"></div>
+        <p class="text-base leading-relaxed mt-6" style="color:var(--c-text-2);">ご希望のサービスをお選びいただけます。</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+
+        <!-- 健康サポート -->
+        <div class="service-card reveal d1">
+          <div class="flex items-start gap-5 mb-7">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style="background:var(--c-accent-pale);">
+              <i data-lucide="heart-pulse" class="w-6 h-6" style="color:var(--c-accent);"></i>
+            </div>
+            <div>
+              <h3 class="text-2xl font-bold" style="color:var(--c-text-1);">健康サポート</h3>
+              <p class="text-sm mt-1" style="color:var(--c-text-3);">体のコンディション調整をお手伝いします</p>
+            </div>
+          </div>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>コンディショニング</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>リラクゼーション</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>ストレッチ</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>健康相談</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>ウォーキング</li>
+          </ul>
+          <div class="text-xs leading-relaxed px-4 py-3 rounded-xl" style="color:var(--c-text-3);background:var(--c-bg);border:1px solid var(--c-border);">
+            ※椅子に座った状態で実施できる施術となります。
+          </div>
+        </div>
+
+        <!-- 福祉サポート -->
+        <div class="service-card reveal d2">
+          <div class="flex items-start gap-5 mb-7">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style="background:var(--c-accent-pale);">
+              <i data-lucide="users" class="w-6 h-6" style="color:var(--c-accent);"></i>
+            </div>
+            <div>
+              <h3 class="text-2xl font-bold" style="color:var(--c-text-1);">福祉サポート</h3>
+              <p class="text-sm mt-1" style="color:var(--c-text-3);">日常の外出や生活をサポートします</p>
+            </div>
+          </div>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>買い物の同行</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>散歩の見守り</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>外食や旅行の付き添い</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>お話し相手</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>福祉制度の相談</li>
+          </ul>
+          <div class="text-xs leading-relaxed px-4 py-3 rounded-xl" style="color:var(--c-text-3);background:var(--c-bg);border:1px solid var(--c-border);">
+            ※対応可能範囲は身体介護を伴わない介助となります。
+          </div>
+        </div>
+
+        <!-- ITサポート -->
+        <div class="service-card reveal d3">
+          <div class="flex items-start gap-5 mb-7">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style="background:var(--c-accent-pale);">
+              <i data-lucide="laptop" class="w-6 h-6" style="color:var(--c-accent);"></i>
+            </div>
+            <div>
+              <h3 class="text-2xl font-bold" style="color:var(--c-text-1);">ITサポート</h3>
+              <p class="text-sm mt-1" style="color:var(--c-text-3);">デジタル機器のお困りごとをサポート</p>
+            </div>
+          </div>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>スマホの使用方法</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>パソコンの設定</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>予約手続きサポート</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>旅行計画サポート</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>ホームページ制作</li>
+          </ul>
+          <div class="text-xs leading-relaxed px-4 py-3 rounded-xl" style="color:var(--c-text-3);background:var(--c-bg);border:1px solid var(--c-border);">
+            ※資料作成などの依頼はご相談ください。
+          </div>
+        </div>
+
+        <!-- 暮らしサポート -->
+        <div class="service-card reveal d4">
+          <div class="flex items-start gap-5 mb-7">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style="background:var(--c-accent-pale);">
+              <i data-lucide="home" class="w-6 h-6" style="color:var(--c-accent);"></i>
+            </div>
+            <div>
+              <h3 class="text-2xl font-bold" style="color:var(--c-text-1);">暮らしサポート</h3>
+              <p class="text-sm mt-1" style="color:var(--c-text-3);">お家まわりの軽作業をお手伝いします</p>
+            </div>
+          </div>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>住まいのご相談</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>不用品処分のサポート</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>引っ越しのお手伝い</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>電球の付け替え</li>
+            <li class="flex items-center gap-3 text-sm" style="color:var(--c-text-2);"><span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:var(--c-accent-light);"></span>その他軽作業</li>
+          </ul>
+          <div class="text-xs leading-relaxed px-4 py-3 rounded-xl" style="color:var(--c-text-3);background:var(--c-bg);border:1px solid var(--c-border);">
+            ※その他、暮らしに関するお困りごとがあればご相談ください。
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="py-24 md:py-32 px-6 lg:px-8" style="background:var(--c-bg);">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="text-center mb-16 reveal">
+        <span class="section-label">Pricing</span>
+        <h2 class="text-4xl md:text-5xl font-bold mt-2" style="color:var(--c-text-1);">料金メニュー</h2>
+        <div class="section-divider"></div>
+        <p class="text-base mt-6" style="color:var(--c-text-2);">ご希望をお知らせください。</p>
+      </div>
+
+      <div class="rounded-3xl overflow-hidden shadow-lg reveal" style="background:white;border:1px solid var(--c-border);">
+
+        <!-- Header bar -->
+        <div class="flex flex-wrap items-center justify-between gap-3 px-6 md:px-12 py-6 md:py-8" style="border-bottom:1px solid var(--c-border);">
+          <h3 class="text-lg md:text-xl font-bold" style="color:var(--c-text-1);">基本料金（税込）</h3>
+          <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs md:text-sm font-semibold" style="background:var(--c-surface-alt);border:1px solid var(--c-border);color:var(--c-accent);">
+            <i data-lucide="layers" class="w-3.5 h-3.5"></i> 組み合わせ自由
+          </div>
+        </div>
+
+        <!-- Price grid -->
+        <div class="grid grid-cols-3" style="divide-x:1px solid var(--c-border);">
+
+          <div class="px-3 md:px-10 py-8 md:py-12 text-center" style="border-right:1px solid var(--c-border);">
+            <div class="text-xs font-bold tracking-widest uppercase mb-3" style="color:var(--c-text-3);">20分</div>
+            <div class="text-2xl sm:text-3xl md:text-5xl font-bold" style="color:var(--c-text-1);">990</div>
+            <div class="text-xs md:text-base mt-1" style="color:var(--c-text-3);">円</div>
+          </div>
+
+          <div class="px-3 md:px-10 py-8 md:py-12 text-center relative" style="background:var(--c-text-1);border-right:1px solid rgba(255,255,255,0.1);">
+            <div class="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-0 px-3 py-1 rounded-full text-xs font-bold text-white" style="background:var(--c-accent);">おすすめ</div>
+            <div class="text-xs font-bold tracking-widest uppercase mb-3" style="color:var(--c-accent-light);">40分</div>
+            <div class="text-2xl sm:text-3xl md:text-5xl font-bold text-white">1,980</div>
+            <div class="text-xs md:text-base mt-1" style="color:var(--c-accent-light);">円</div>
+          </div>
+
+          <div class="px-3 md:px-10 py-8 md:py-12 text-center">
+            <div class="text-xs font-bold tracking-widest uppercase mb-3" style="color:var(--c-text-3);">60分</div>
+            <div class="text-2xl sm:text-3xl md:text-5xl font-bold" style="color:var(--c-text-1);">2,970</div>
+            <div class="text-xs md:text-base mt-1" style="color:var(--c-text-3);">円</div>
+          </div>
+
+        </div>
+
+        <!-- Notes -->
+        <div class="grid md:grid-cols-2 gap-6 px-8 md:px-12 py-8" style="border-top:1px solid var(--c-border);">
+          <div class="flex items-start gap-4">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style="background:var(--c-accent-pale);">
+              <i data-lucide="plus-circle" class="w-4 h-4" style="color:var(--c-accent);"></i>
+            </div>
+            <div>
+              <div class="font-bold text-sm mb-1" style="color:var(--c-text-1);">延長料金</div>
+              <p class="text-sm leading-relaxed" style="color:var(--c-text-2);">以降、<strong>20分毎に990円（税込）加算</strong>となります。</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style="background:var(--c-accent-pale);">
+              <i data-lucide="map-pin" class="w-4 h-4" style="color:var(--c-accent);"></i>
+            </div>
+            <div>
+              <div class="font-bold text-sm mb-1" style="color:var(--c-text-1);">出張費</div>
+              <p class="text-sm leading-relaxed" style="color:var(--c-text-2);">別途、<strong>出張費 500円（京都市内）</strong>を頂戴いたします。</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PROFILE -->
+  <section id="profile" class="py-24 md:py-32 px-6 lg:px-8" style="background:var(--c-surface);">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="text-center mb-16 reveal">
+        <span class="section-label">Profile</span>
+        <h2 class="text-4xl md:text-5xl font-bold mt-2" style="color:var(--c-text-1);">プロフィール</h2>
+        <div class="section-divider"></div>
+      </div>
+
+      <div class="grid md:grid-cols-5 gap-8 reveal">
+
+        <!-- Left: Photo -->
+        <div class="md:col-span-2">
+          <div class="rounded-3xl p-8 text-center" style="background:var(--c-surface-alt);">
+            <div class="w-28 h-28 rounded-full overflow-hidden mx-auto mb-5" style="border:3px solid rgba(255,255,255,0.6);box-shadow:0 8px 32px rgba(168,130,90,0.18),0 2px 8px rgba(0,0,0,0.08),inset 0 1px 0 rgba(255,255,255,0.8);backdrop-filter:blur(4px);">
+              <img
+                src="https://lh3.googleusercontent.com/d/1wGGTGZoA1FBJUKHHpM5SK-lkPfbs6TAB"
+                alt="プロフィール写真"
+                style="width:100%;height:100%;object-fit:cover;"
+                onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&auto=format&fit=crop';"
+              />
+            </div>
+            <h3 class="text-xl font-bold mb-4" style="color:var(--c-text-1);">福祉業界10年間で<br>1,000名以上の対応実績</h3>
+            <p class="text-sm leading-relaxed text-left" style="color:var(--c-text-2);">
+              こんにちは。ネギシと申します。これまでの福祉・ITの現場で培った経験を活かし、ご縁のあった方の人生に少しでも良い影響を与えることを心がけ、サポートを提供しております。家族や友人のように大切な存在として対応することがポリシーで、皆様にとって安心して相談できる存在になれたら嬉しく思います。趣味は、スポーツ観戦したり、旅行に行って様々な文化に触れることが好きです。エジプトのピラミッドの中にも入りました！　どうぞよろしくお願いいたします。
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: Qualifications + Experience -->
+        <div class="md:col-span-3 space-y-10">
+
+          <div>
+            <h4 class="text-xl font-bold mb-6 flex items-center gap-3" style="color:var(--c-text-1);">
+              <span class="w-1 h-6 rounded-full inline-block" style="background:var(--c-accent);"></span>保有資格
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="flex items-center gap-3 rounded-xl px-4 py-3" style="background:var(--c-bg);border:1px solid var(--c-border);">
+                <i data-lucide="award" class="w-4 h-4 shrink-0" style="color:var(--c-accent);"></i>
+                <span class="text-sm font-medium" style="color:var(--c-text-2);">パーソナルトレーナー</span>
+              </div>
+              <div class="flex items-center gap-3 rounded-xl px-4 py-3" style="background:var(--c-bg);border:1px solid var(--c-border);">
+                <i data-lucide="award" class="w-4 h-4 shrink-0" style="color:var(--c-accent);"></i>
+                <span class="text-sm font-medium" style="color:var(--c-text-2);">健康運動実践指導者</span>
+              </div>
+              <div class="flex items-center gap-3 rounded-xl px-4 py-3" style="background:var(--c-bg);border:1px solid var(--c-border);">
+                <i data-lucide="award" class="w-4 h-4 shrink-0" style="color:var(--c-accent);"></i>
+                <span class="text-sm font-medium" style="color:var(--c-text-2);">介護福祉士</span>
+              </div>
+              <div class="flex items-center gap-3 rounded-xl px-4 py-3" style="background:var(--c-bg);border:1px solid var(--c-border);">
+                <i data-lucide="award" class="w-4 h-4 shrink-0" style="color:var(--c-accent);"></i>
+                <span class="text-sm font-medium" style="color:var(--c-text-2);">同行援護従業者</span>
+              </div>
+              <div class="flex items-center gap-3 rounded-xl px-4 py-3" style="background:var(--c-bg);border:1px solid var(--c-border);">
+                <i data-lucide="award" class="w-4 h-4 shrink-0" style="color:var(--c-accent);"></i>
+                <span class="text-sm font-medium" style="color:var(--c-text-2);">日商簿記3級</span>
+              </div>
+              <div class="flex items-center gap-3 rounded-xl px-4 py-3" style="background:var(--c-bg);border:1px solid var(--c-border);">
+                <i data-lucide="award" class="w-4 h-4 shrink-0" style="color:var(--c-accent);"></i>
+                <span class="text-sm font-medium" style="color:var(--c-text-2);">普通自動車運転免許</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-xl font-bold mb-6 flex items-center gap-3" style="color:var(--c-text-1);">
+              <span class="w-1 h-6 rounded-full inline-block" style="background:var(--c-accent);"></span>実務経験
+            </h4>
+            <div class="space-y-3">
+              <div class="flex gap-4 items-center">
+                <div class="w-14 text-right shrink-0">
+                  <span class="text-xs font-bold px-2 py-1 rounded-full" style="color:var(--c-accent);background:var(--c-accent-pale);">4年</span>
+                </div>
+                <div class="flex-1 rounded-xl px-5 py-4" style="background:var(--c-bg);border:1px solid var(--c-border);">
+                  <div class="font-semibold text-sm" style="color:var(--c-text-1);">介護予防トレーナー</div>
+                  <div class="text-xs mt-1" style="color:var(--c-text-3);">リハビリ型介護事業</div>
+                </div>
+              </div>
+              <div class="flex gap-4 items-center">
+                <div class="w-14 text-right shrink-0">
+                  <span class="text-xs font-bold px-2 py-1 rounded-full" style="color:var(--c-accent);background:var(--c-accent-pale);">5年</span>
+                </div>
+                <div class="flex-1 rounded-xl px-5 py-4" style="background:var(--c-bg);border:1px solid var(--c-border);">
+                  <div class="font-semibold text-sm" style="color:var(--c-text-1);">サービス提供責任者</div>
+                  <div class="text-xs mt-1" style="color:var(--c-text-3);">障害福祉サービス事業</div>
+                </div>
+              </div>
+              <div class="flex gap-4 items-center">
+                <div class="w-14 text-right shrink-0">
+                  <span class="text-xs font-bold px-2 py-1 rounded-full" style="color:var(--c-accent);background:var(--c-accent-pale);">3年</span>
+                </div>
+                <div class="flex-1 rounded-xl px-5 py-4" style="background:var(--c-bg);border:1px solid var(--c-border);">
+                  <div class="font-semibold text-sm" style="color:var(--c-text-1);">福祉サービス営業職</div>
+                  <div class="text-xs mt-1" style="color:var(--c-text-3);">老人ホーム紹介事業</div>
+                </div>
+              </div>
+              <div class="flex gap-4 items-center">
+                <div class="w-14 text-right shrink-0">
+                  <span class="text-xs font-bold px-2 py-1 rounded-full text-white" style="background:var(--c-text-1);">現在</span>
+                </div>
+                <div class="flex-1 rounded-xl px-5 py-4" style="background:var(--c-text-1);">
+                  <div class="font-semibold text-sm text-white">経理・人事・DX推進</div>
+                  <div class="text-xs mt-1" style="color:rgba(255,255,255,0.7);">不動産仲介事業</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INFO -->
+  <section id="info" class="py-24 md:py-32 px-6 lg:px-8" style="background:var(--c-bg);">
+    <div class="max-w-4xl mx-auto">
+
+      <div class="text-center mb-16 reveal">
+        <span class="section-label">Information</span>
+        <h2 class="text-4xl md:text-5xl font-bold mt-2" style="color:var(--c-text-1);">ご利用案内</h2>
+        <div class="section-divider"></div>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-5 mb-6 reveal">
+        <div class="rounded-2xl p-8 text-center" style="background:white;border:1px solid var(--c-border);">
+          <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-5" style="background:var(--c-accent-pale);">
+            <i data-lucide="clock" class="w-5 h-5" style="color:var(--c-accent);"></i>
+          </div>
+          <div class="text-xs font-bold tracking-widest uppercase mb-3" style="color:var(--c-text-3);">対応時間</div>
+          <div class="text-2xl font-bold" style="color:var(--c-text-1);">9:00 〜 19:00</div>
+        </div>
+        <div class="rounded-2xl p-8 text-center" style="background:white;border:1px solid var(--c-border);">
+          <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-5" style="background:var(--c-accent-pale);">
+            <i data-lucide="map-pin" class="w-5 h-5" style="color:var(--c-accent);"></i>
+          </div>
+          <div class="text-xs font-bold tracking-widest uppercase mb-3" style="color:var(--c-text-3);">対応エリア</div>
+          <div class="text-2xl font-bold" style="color:var(--c-text-1);">京都市内</div>
+        </div>
+        <div class="rounded-2xl p-8 text-center" style="background:white;border:1px solid var(--c-border);">
+          <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-5" style="background:var(--c-accent-pale);">
+            <i data-lucide="train" class="w-5 h-5" style="color:var(--c-accent);"></i>
+          </div>
+          <div class="text-xs font-bold tracking-widest uppercase mb-3" style="color:var(--c-text-3);">交通手段</div>
+          <div class="text-2xl font-bold" style="color:var(--c-text-1);">公共交通機関</div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl p-8 md:p-10 reveal" style="background:white;border:1px solid var(--c-border);">
+        <h4 class="text-xl font-bold mb-6 flex items-center gap-3" style="color:var(--c-text-1);">
+          <span class="w-1 h-6 rounded-full inline-block" style="background:var(--c-accent);"></span>受付条件
+        </h4>
+        <ul class="space-y-5">
+          <li class="flex items-start gap-4">
+            <div class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background:var(--c-accent-pale);">
+              <i data-lucide="check" class="w-3.5 h-3.5" style="color:var(--c-accent);"></i>
+            </div>
+            <span class="text-sm leading-relaxed" style="color:var(--c-text-2);">世代は問いません。お子様からご高齢の方まで、どなたでもご利用いただけます。</span>
+          </li>
+          <li class="flex items-start gap-4">
+            <div class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background:var(--c-accent-pale);">
+              <i data-lucide="check" class="w-3.5 h-3.5" style="color:var(--c-accent);"></i>
+            </div>
+            <span class="text-sm leading-relaxed" style="color:var(--c-text-2);">身体介護は制限があります。対応可能範囲についてはお気軽にご相談ください。</span>
+          </li>
+          <li class="flex items-start gap-4">
+            <div class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background:var(--c-accent-pale);">
+              <i data-lucide="check" class="w-3.5 h-3.5" style="color:var(--c-accent);"></i>
+            </div>
+            <span class="text-sm leading-relaxed" style="color:var(--c-text-2);">公共交通機関でお伺いします。出張費 500円（京都市内）を別途頂戴いたします。</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-28 md:py-36 px-6 relative overflow-hidden" style="background:#1C1A16;">
+    <div class="absolute inset-0 pointer-events-none" style="background-image:radial-gradient(circle at 2px 2px,rgba(255,255,255,0.04) 1px,transparent 0);background-size:32px 32px;"></div>
+    <div class="absolute left-1/2 top-0 -translate-x-1/2 pointer-events-none" style="width:600px;height:300px;background:radial-gradient(ellipse,rgba(168,130,90,0.12) 0%,transparent 70%);"></div>
+
+    <div class="max-w-3xl mx-auto text-center relative reveal" style="z-index:1;">
+      <span class="section-label" style="color:var(--c-accent-light);">Contact</span>
+      <h2 class="text-4xl md:text-6xl font-bold text-white mt-4 mb-6 leading-tight">
+        お気軽に<br>ご相談ください
+      </h2>
+      <p class="text-base md:text-lg mb-12 leading-relaxed" style="color:#9E9084;">
+        まずはメールにてお問い合わせください。<br>ご相談・お見積もりは無料です。
+      </p>
+      <a href="mailto:negishi.0219@gmail.com" class="inline-flex items-center gap-3 text-white text-lg px-12 py-5 rounded-full font-bold shadow-2xl transition-all" style="background:var(--c-accent);text-decoration:none;" onmouseover="this.style.background='var(--c-accent-dark)';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='var(--c-accent)';this.style.transform='none';">
+        <i data-lucide="mail" class="w-5 h-5"></i> お問い合わせはこちら
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-10 px-6" style="background:#14120F;color:#6B5F52;">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-3">
+          <div class="w-7 h-7">
+            <img src="https://lh3.googleusercontent.com/d/1riq4cZzex-mUIqjfNqH6BMq9GqF1Rc12" alt="logo" style="width:100%;height:100%;object-fit:contain;opacity:0.6;" />
+          </div>
+          <span class="font-semibold text-white">暮らしのトータルサポート</span>
+        </div>
+        <nav class="flex gap-8">
+          <button data-scroll-to="top"          style="background:none;border:none;cursor:pointer;font-size:0.75rem;color:#6B5F52;letter-spacing:0.1em;" onmouseover="this.style.color='#CEAD8A'" onmouseout="this.style.color='#6B5F52'">TOP</button>
+          <button data-scroll-to="services-area" style="background:none;border:none;cursor:pointer;font-size:0.75rem;color:#6B5F52;letter-spacing:0.1em;" onmouseover="this.style.color='#CEAD8A'" onmouseout="this.style.color='#6B5F52'">SERVICES</button>
+          <button data-scroll-to="pricing"       style="background:none;border:none;cursor:pointer;font-size:0.75rem;color:#6B5F52;letter-spacing:0.1em;" onmouseover="this.style.color='#CEAD8A'" onmouseout="this.style.color='#6B5F52'">PRICING</button>
+          <button data-scroll-to="profile"       style="background:none;border:none;cursor:pointer;font-size:0.75rem;color:#6B5F52;letter-spacing:0.1em;" onmouseover="this.style.color='#CEAD8A'" onmouseout="this.style.color='#6B5F52'">PROFILE</button>
+        </nav>
+        <p style="font-size:0.75rem;">&copy; <span id="current-year"></span> 暮らしのトータルサポート. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // Header scroll effect
+    const header = document.getElementById('main-header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+
+    // Mobile menu
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu    = document.getElementById('mobile-menu');
+    const menuIcon      = document.getElementById('menu-icon');
+    let menuOpen = false;
+
+    function closeMobileMenu() {
+      menuOpen = false;
+      mobileMenu.style.maxHeight = '0';
+      mobileMenu.classList.remove('open');
+      menuIcon.setAttribute('data-lucide', 'menu');
+      lucide.createIcons();
+    }
+
+    mobileMenuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      if (menuOpen) {
+        mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 200 + 'px';
+        mobileMenu.classList.add('open');
+        menuIcon.setAttribute('data-lucide', 'x');
+      } else {
+        closeMobileMenu();
+      }
+      lucide.createIcons();
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('[data-scroll-to]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const el = document.getElementById(btn.getAttribute('data-scroll-to'));
+        if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); closeMobileMenu(); }
+      });
+    });
+
+    // Nav active state
+    const navSections = ['top','services-area','pricing','profile','info'];
+    const navLinks = document.querySelectorAll('.nav-link');
+    window.addEventListener('scroll', () => {
+      let current = 'top';
+      navSections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= 140) current = id;
+      });
+      navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('data-target') === current));
+    }, { passive: true });
+
+    // Reveal on scroll
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+  </script>
+</body>
+</html>
