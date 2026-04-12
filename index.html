@@ -48,11 +48,13 @@
     /* HEADER */
     #main-header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(242,237,230,0.92);
+      backdrop-filter: blur(12px);
       transition: background 0.3s, box-shadow 0.3s;
     }
     #main-header.scrolled {
-      background: rgba(255,255,255,0.96);
-      backdrop-filter: blur(12px);
+      background: rgba(232,225,215,0.97);
+      backdrop-filter: blur(16px);
       box-shadow: 0 1px 0 var(--c-border);
     }
 
@@ -197,15 +199,15 @@
 <body>
 
   <!-- HEADER -->
-  <header id="main-header" class="py-5">
+  <header id="main-header" class="py-1.5">
     <div class="max-w-6xl mx-auto px-6 lg:px-8">
       <div class="flex items-center justify-between">
 
-        <button data-scroll-to="top" class="flex items-center gap-3" style="background:none;border:none;cursor:pointer;">
-          <div class="w-9 h-9 flex items-center justify-center">
+        <button data-scroll-to="top" class="flex items-center gap-3" style="background:none;border:none;cursor:pointer;line-height:1;">
+          <div class="w-12 h-12 flex items-center justify-center" style="vertical-align:middle;">
             <img src="https://lh3.googleusercontent.com/d/1riq4cZzex-mUIqjfNqH6BMq9GqF1Rc12" alt="lifeups logo" class="w-full h-full object-contain" />
           </div>
-          <span class="text-lg font-bold tracking-tight" style="font-family:'Shippori Mincho',serif; color:var(--c-text-1)">
+          <span class="text-2xl font-bold tracking-tight" style="font-family:'Shippori Mincho',serif; color:var(--c-text-1);line-height:1;display:flex;align-items:center;">
             暮らしの<span style="color:var(--c-accent)">トータルサポート</span>
           </span>
         </button>
